@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  PRODUCTION_SITE_ORIGIN,
   buildLlmsTxt,
   buildRobotsTxt,
   buildSitemapXml,
@@ -8,23 +9,34 @@ import {
   normalizeOrigin,
 } from './clinicSeo.ts';
 
-test('normalizeOrigin handles trailing slashes and placeholders cleanly', () => {
-  assert.equal(normalizeOrigin('https://example.com/'), 'https://example.com');
-  assert.equal(normalizeOrigin('MY_APP_URL'), '');
-  assert.equal(normalizeOrigin(''), '');
+test('normalizeOrigin defaults cleanly to https://khbugang.com', () => {
+  assert.equal(normalizeOrigin('https://khbugang.com/'), PRODUCTION_SITE_ORIGIN);
+  assert.equal(normalizeOrigin('MY_APP_URL'), PRODUCTION_SITE_ORIGIN);
+  assert.equal(normalizeOrigin(''), PRODUCTION_SITE_ORIGIN);
 });
 
-test('buildStructuredDataGraph emits MedicalClinic, Physician, and FAQPage aligned with clinic data', () => {
-  const graph = buildStructuredDataGraph('https://khbg.example.com/');
+test('buildStructuredDataGraph emits MedicalClinic/LocalBusiness/Organization, Physician/Person, BreadcrumbList, WebSite, WebPage, and FAQPage', () => {
+  const graph = buildStructuredDataGraph();
   const types = graph['@graph'].map((node) => node['@type']);
-  assert.deepEqual(types, ['WebSite', 'WebPage', 'MedicalClinic', 'Physician', 'FAQPage']);
+  assert.deepEqual(types, [
+    'WebSite',
+    'WebPage',
+    'BreadcrumbList',
+    ['MedicalClinic', 'LocalBusiness', 'Organization'],
+    ['Physician', 'Person'],
+    'FAQPage',
+  ]);
 
-  const clinic = graph['@graph'].find((n) => n['@type'] === 'MedicalClinic') as Record<string, unknown>;
+  const clinic = graph['@graph'].find(
+    (n) => Array.isArray(n['@type']) && n['@type'].includes('MedicalClinic')
+  ) as Record<string, unknown>;
   assert.equal(clinic.name, '경희부강한의원');
-  assert.equal(clinic.url, 'https://khbg.example.com/');
+  assert.equal(clinic.url, 'https://khbugang.com/');
   assert.equal(clinic.telephone, '+82-2-842-8889');
 
-  const physician = graph['@graph'].find((n) => n['@type'] === 'Physician') as Record<string, unknown>;
+  const physician = graph['@graph'].find(
+    (n) => Array.isArray(n['@type']) && n['@type'].includes('Physician')
+  ) as Record<string, unknown>;
   assert.equal(physician.name, '이현일');
   assert.ok(Array.isArray(physician.hasCredential) && physician.hasCredential.length >= 6);
 
@@ -36,25 +48,26 @@ test('buildStructuredDataGraph emits MedicalClinic, Physician, and FAQPage align
   assert.match(faq.mainEntity[3].acceptedAnswer.text, /롯데 하이마트 신길점/);
 });
 
-test('buildRobotsTxt allows Google, Naver Yeti, and AI crawlers with Sitemap line', () => {
-  const robots = buildRobotsTxt('https://khbg.example.com');
-  for (const agent of ['*', 'Googlebot', 'Yeti', 'GPTBot', 'OAI-SearchBot', 'PerplexityBot', 'ClaudeBot', 'Google-Extended']) {
-    assert.ok(robots.includes(`User-agent: ${agent}`), `Missing User-agent: ${agent}`);
+test('buildRobotsTxt allows OAI-SearchBot and search engines while blocking GPTBot with absolute Sitemap URL', () => {
+  const robots = buildRobotsTxt();
+  for (const agent of ['*', 'Googlebot', 'Yeti', 'Bingbot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'ClaudeBot']) {
+    assert.ok(robots.includes(`User-agent: ${agent}\nAllow: /`), `Missing Allow for ${agent}`);
   }
-  assert.ok(robots.includes('Allow: /'));
-  assert.ok(robots.includes('Sitemap: https://khbg.example.com/sitemap.xml'));
+  assert.ok(robots.includes('User-agent: GPTBot\nDisallow: /'));
+  assert.ok(robots.includes('Sitemap: https://khbugang.com/sitemap.xml'));
 });
 
-test('buildSitemapXml outputs valid XML with root and llms.txt URLs', () => {
-  const xml = buildSitemapXml('https://khbg.example.com', '2026-11-16');
-  assert.ok(xml.includes('<loc>https://khbg.example.com/</loc>'));
-  assert.ok(xml.includes('<loc>https://khbg.example.com/llms.txt</loc>'));
+test('buildSitemapXml outputs valid XML with https://khbugang.com URLs', () => {
+  const xml = buildSitemapXml(undefined, '2026-11-16');
+  assert.ok(xml.includes('<loc>https://khbugang.com/</loc>'));
+  assert.ok(xml.includes('<loc>https://khbugang.com/llms.txt</loc>'));
   assert.ok(xml.includes('<lastmod>2026-11-16</lastmod>'));
 });
 
-test('buildLlmsTxt summarizes doctor credentials, clinics, schedule, and location', () => {
-  const llms = buildLlmsTxt('https://khbg.example.com');
+test('buildLlmsTxt summarizes khbugang.com, doctor credentials, clinics, schedule, and location', () => {
+  const llms = buildLlmsTxt();
   assert.ok(llms.includes('# 경희부강한의원'));
+  assert.ok(llms.includes('https://khbugang.com/'));
   assert.ok(llms.includes('이현일 대표원장'));
   assert.ok(llms.includes('통증 치료 클리닉'));
   assert.ok(llms.includes('롯데 하이마트 신길점'));

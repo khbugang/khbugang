@@ -7,33 +7,29 @@ import {
   TREATMENT_CLINICS,
 } from '../data/clinicData';
 
+export const PRODUCTION_SITE_ORIGIN = 'https://khbugang.com';
+
 export function normalizeOrigin(rawUrl?: string | null): string {
-  if (!rawUrl) return '';
+  if (!rawUrl) return PRODUCTION_SITE_ORIGIN;
   const trimmed = rawUrl.trim().replace(/\/+$/, '');
-  if (!trimmed || trimmed === 'MY_APP_URL') return '';
-  if (!/^https?:\/\//i.test(trimmed)) return '';
+  if (!trimmed || trimmed === 'MY_APP_URL') return PRODUCTION_SITE_ORIGIN;
+  if (!/^https?:\/\//i.test(trimmed)) return PRODUCTION_SITE_ORIGIN;
   return trimmed;
 }
 
 export function buildStructuredDataGraph(rawOrigin?: string | null) {
   const origin = normalizeOrigin(rawOrigin);
-  const siteUrl = origin ? `${origin}/` : `${CLINIC_LINKS.naverBlog}`;
-  const anchorBase = origin || CLINIC_LINKS.naverBlog;
-  const clinicId = `${anchorBase}#clinic`;
-  const physicianId = `${anchorBase}#physician`;
-  const websiteId = `${anchorBase}#website`;
-  const webpageId = `${anchorBase}#webpage`;
-  const faqId = `${anchorBase}#faq`;
+  const siteUrl = `${origin}/`;
+  const clinicId = `${origin}/#clinic`;
+  const physicianId = `${origin}/#physician`;
+  const websiteId = `${origin}/#website`;
+  const webpageId = `${origin}/#webpage`;
+  const breadcrumbId = `${origin}/#breadcrumb`;
+  const faqId = `${origin}/#faq`;
 
-  const heroImageUrl = origin
-    ? `${origin}/src/assets/images/hero_clinic_interior_1794831626501.jpg`
-    : '/src/assets/images/hero_clinic_interior_1794831626501.jpg';
-  const logoImageUrl = origin
-    ? `${origin}/assets/aistudio/______6fe39d29.JPG`
-    : '/assets/aistudio/______6fe39d29.JPG';
-  const doctorImageUrl = origin
-    ? `${origin}/src/assets/images/doctor_portrait_editorial_1794831626396.jpg`
-    : '/src/assets/images/doctor_portrait_editorial_1794831626396.jpg';
+  const heroImageUrl = `${origin}/src/assets/images/hero_clinic_interior_1794831626501.jpg`;
+  const logoImageUrl = `${origin}/assets/aistudio/______6fe39d29.JPG`;
+  const doctorImageUrl = `${origin}/src/assets/images/doctor_portrait_editorial_1794831626396.jpg`;
 
   return {
     '@context': 'https://schema.org',
@@ -60,6 +56,9 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
         isPartOf: {
           '@id': websiteId,
         },
+        breadcrumb: {
+          '@id': breadcrumbId,
+        },
         about: {
           '@id': clinicId,
         },
@@ -76,7 +75,19 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
         },
       },
       {
-        '@type': 'MedicalClinic',
+        '@type': 'BreadcrumbList',
+        '@id': breadcrumbId,
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: CLINIC_INFO.nameKo,
+            item: siteUrl,
+          },
+        ],
+      },
+      {
+        '@type': ['MedicalClinic', 'LocalBusiness', 'Organization'],
         '@id': clinicId,
         name: CLINIC_INFO.nameKo,
         alternateName: CLINIC_INFO.nameEn,
@@ -183,7 +194,7 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
         },
       },
       {
-        '@type': 'Physician',
+        '@type': ['Physician', 'Person'],
         '@id': physicianId,
         name: DOCTOR_PROFILE.name,
         honorificPrefix: DOCTOR_PROFILE.title,
@@ -282,34 +293,65 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
 
 export function buildRobotsTxt(rawOrigin?: string | null): string {
   const origin = normalizeOrigin(rawOrigin);
-  const sitemapLine = origin ? `Sitemap: ${origin}/sitemap.xml` : 'Sitemap: /sitemap.xml';
-
-  const allowedBots = [
-    'Googlebot',
-    'Google-Extended',
-    'Yeti',
-    'Bingbot',
-    'GPTBot',
-    'OAI-SearchBot',
-    'ChatGPT-User',
-    'PerplexityBot',
-    'Perplexity-User',
-    'ClaudeBot',
-    'Claude-Web',
-    'anthropic-ai',
-    'Applebot',
-    'Applebot-Extended',
-    'DuckAssistBot',
-  ];
 
   return [
     '# 경희부강한의원 (Kyunghee Bugang Korean Medicine Clinic)',
-    '# 검색엔진 및 AI 검색 크롤러 전면 허용',
+    '# 기본 크롤링 정책: 주요 검색엔진 및 AI 검색 크롤러 허용',
     'User-agent: *',
     'Allow: /',
     '',
-    ...allowedBots.flatMap((bot) => [`User-agent: ${bot}`, 'Allow: /', '']),
-    sitemapLine,
+    '# 주요 검색엔진 크롤러 허용',
+    'User-agent: Googlebot',
+    'Allow: /',
+    '',
+    'User-agent: Google-Extended',
+    'Allow: /',
+    '',
+    'User-agent: Yeti',
+    'Allow: /',
+    '',
+    'User-agent: Bingbot',
+    'Allow: /',
+    '',
+    'User-agent: Applebot',
+    'Allow: /',
+    '',
+    'User-agent: Applebot-Extended',
+    'Allow: /',
+    '',
+    '# AI 검색 노출·인용 목적 크롤러 허용',
+    '# OAI-SearchBot: ChatGPT 검색 결과 노출 및 출처 인용용 크롤러',
+    'User-agent: OAI-SearchBot',
+    'Allow: /',
+    '',
+    '# ChatGPT-User: ChatGPT 사용자가 직접 링크 조회 시 사용하는 크롤러',
+    'User-agent: ChatGPT-User',
+    'Allow: /',
+    '',
+    'User-agent: PerplexityBot',
+    'Allow: /',
+    '',
+    'User-agent: Perplexity-User',
+    'Allow: /',
+    '',
+    'User-agent: ClaudeBot',
+    'Allow: /',
+    '',
+    'User-agent: Claude-Web',
+    'Allow: /',
+    '',
+    'User-agent: anthropic-ai',
+    'Allow: /',
+    '',
+    'User-agent: DuckAssistBot',
+    'Allow: /',
+    '',
+    '# AI 모델 학습 전용 크롤러 분리 설정',
+    '# GPTBot: OpenAI 모델 학습 데이터 수집용 크롤러 (검색 노출용 OAI-SearchBot과 별도 차단)',
+    'User-agent: GPTBot',
+    'Disallow: /',
+    '',
+    `Sitemap: ${origin}/sitemap.xml`,
     '',
   ].join('\n');
 }
@@ -319,19 +361,17 @@ export function buildSitemapXml(
   lastMod: string = new Date().toISOString().slice(0, 10)
 ): string {
   const origin = normalizeOrigin(rawOrigin);
-  const rootLoc = origin ? `${origin}/` : '/';
-  const llmsLoc = origin ? `${origin}/llms.txt` : '/llms.txt';
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>${rootLoc}</loc>
+    <loc>${origin}/</loc>
     <lastmod>${lastMod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>${llmsLoc}</loc>
+    <loc>${origin}/llms.txt</loc>
     <lastmod>${lastMod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -342,7 +382,7 @@ export function buildSitemapXml(
 
 export function buildLlmsTxt(rawOrigin?: string | null): string {
   const origin = normalizeOrigin(rawOrigin);
-  const homeUrl = origin ? `${origin}/` : '/';
+  const homeUrl = `${origin}/`;
 
   const credentialLines = DOCTOR_PROFILE.credentials.map(
     (c) => `- ${c.period ? `[${c.period}] ` : ''}${c.role}${c.detail ? ` (${c.detail})` : ''}`

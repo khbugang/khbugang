@@ -2,12 +2,13 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import * as esbuild from 'esbuild';
 import fs from 'fs';
-import type { IncomingMessage } from 'http';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { defineConfig, type Plugin } from 'vite';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const PRODUCTION_SITE_ORIGIN = 'https://khbugang.com';
 
 function sanitizeOrigin(raw?: string | null): string {
   if (!raw) return '';
@@ -17,21 +18,8 @@ function sanitizeOrigin(raw?: string | null): string {
   return trimmed;
 }
 
-function resolveRequestOrigin(req?: IncomingMessage): string {
-  if (req) {
-    const forwardedProto = req.headers['x-forwarded-proto'];
-    const forwardedHost = req.headers['x-forwarded-host'];
-    const proto = Array.isArray(forwardedProto)
-      ? forwardedProto[0]
-      : forwardedProto?.split(',')[0]?.trim();
-    const host = Array.isArray(forwardedHost)
-      ? forwardedHost[0]
-      : forwardedHost?.split(',')[0]?.trim() || req.headers.host;
-    if (host) {
-      return sanitizeOrigin(`${proto || 'https'}://${host}`);
-    }
-  }
-  return sanitizeOrigin(process.env.APP_URL);
+function resolveSiteOrigin(): string {
+  return sanitizeOrigin(process.env.SITE_URL) || PRODUCTION_SITE_ORIGIN;
 }
 
 function injectHtmlSeoAndApp(
@@ -72,7 +60,7 @@ function seoAndPrerenderPlugin(): Plugin {
         }
 
         try {
-          const origin = resolveRequestOrigin(req);
+          const origin = resolveSiteOrigin();
           const seoMod = (await server.ssrLoadModule(
             '/src/seo/clinicSeo.ts'
           )) as typeof import('./src/seo/clinicSeo');
@@ -106,9 +94,7 @@ function seoAndPrerenderPlugin(): Plugin {
         if (!ctx.server) {
           return html;
         }
-        const origin =
-          resolveRequestOrigin((ctx as { req?: IncomingMessage }).req) ||
-          sanitizeOrigin(process.env.APP_URL);
+        const origin = resolveSiteOrigin();
         const entryMod = (await ctx.server.ssrLoadModule(
           '/src/entry-server.tsx'
         )) as { render: () => string };
@@ -162,7 +148,7 @@ function seoAndPrerenderPlugin(): Plugin {
           `${pathToFileURL(seoOut).href}${cacheBust}`
         )) as typeof import('./src/seo/clinicSeo');
 
-        const origin = sanitizeOrigin(process.env.APP_URL);
+        const origin = resolveSiteOrigin();
         const appHtml = entryMod.render();
         const graph = seoMod.buildStructuredDataGraph(origin);
         const rawHtml = fs.readFileSync(indexPath, 'utf-8');

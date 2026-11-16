@@ -13,16 +13,19 @@ import { LocationHoursSection } from './components/LocationHoursSection';
 import { Footer } from './components/Footer';
 import { FloatingActions } from './components/FloatingActions';
 
+const PATH_TO_SECTION: Record<string, string> = {
+  '/hero': 'hero',
+  '/doctor': 'doctor',
+  '/treatments': 'treatments',
+  '/faq': 'faq',
+  '/location': 'location',
+};
+
 export default function App() {
   useEffect(() => {
-    const canonicalUrl = `${window.location.origin}${window.location.pathname}`;
-    const canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (canonicalLink) {
-      canonicalLink.href = canonicalUrl;
-    }
-    const ogUrlMeta = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
-    if (ogUrlMeta) {
-      ogUrlMeta.content = canonicalUrl;
+    const targetId = PATH_TO_SECTION[window.location.pathname.replace(/\/+$/, '')];
+    if (targetId) {
+      document.getElementById(targetId)?.scrollIntoView({ behavior: 'auto' });
     }
   }, []);
 
