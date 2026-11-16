@@ -65,7 +65,7 @@ export const Footer: React.FC = () => {
             </a>
           </p>
 
-          <p className="text-[12.5px] text-white/55 shrink-0">
+          <p suppressHydrationWarning className="text-[12.5px] text-white/55 shrink-0">
             © {new Date().getFullYear()} {CLINIC_INFO.nameKo}. All rights reserved.
           </p>
         </div>
