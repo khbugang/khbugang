@@ -1,0 +1,6 @@
+{
+  "name": "경희부강한의원 | 신길동·신풍역 맞춤 한약 처방 전문 한의원",
+  "description": "서울 영등포구 신길동 신풍역 4번 출구 경희부강한의원 공식 웹사이트. 경희대 한의과대학·이화여대 약학대학 겸임교수 이현일 한의학박사 직접 진단 및 맞춤 한약 처방.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

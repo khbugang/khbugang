@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-serif: "Noto Serif KR", Georgia, Cambria, "Times New Roman", Times, serif;
+  --color-navy-900: #1E2638;
+  --color-navy-950: #151B28;
+  --color-bronze-600: #A36A36;
+  --color-bronze-700: #8B572A;
+  --color-gold-600: #9D7E52;
+  --color-ivory-50: #F9F7F4;
+  --color-ivory-100: #F2EFE9;
+  --color-charcoal-900: #222222;
+  --color-charcoal-600: #555555;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    color: #222222;
+    background-color: #ffffff;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-serif {
+    font-family: var(--font-serif);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
