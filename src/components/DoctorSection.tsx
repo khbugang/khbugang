@@ -30,11 +30,13 @@ export const DoctorSection: React.FC = () => {
               <div className="aspect-[3/4] w-full overflow-hidden">
                 {!portraitFailed ? (
                   <img
-                    src="/src/assets/images/doctor_portrait_editorial_1794831626396.jpg"
+                    src="/images/doctor-profile.jpg"
                     alt="경희부강한의원 이현일 대표원장 한의학박사 프로필 사진"
-                    referrerPolicy="no-referrer"
+                    width={664}
+                    height={623}
+                    decoding="async"
                     onError={() => setPortraitFailed(true)}
-                    className="w-full h-full object-cover object-top"
+                    className="block w-full h-full object-cover object-top"
                   />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-[#F9F7F4]">

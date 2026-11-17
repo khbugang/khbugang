@@ -191,9 +191,12 @@ export const LocationHoursSection: React.FC = () => {
               <div className="flex flex-col sm:flex-row items-center sm:items-stretch gap-5 pb-5 border-b border-[#EFECE6]">
                 <figure className="w-40 sm:w-[164px] aspect-[2/3] rounded overflow-hidden border border-[#E6E1D8] bg-[#F9F7F4] shrink-0">
                   <img
-                    src="/assets/aistudio/_____________4ec2b6e3.jpg"
+                    src="/images/doctor-treatment.jpg"
                     alt="환자를 정성껏 진료 중인 경희부강한의원 이현일 대표원장"
-                    className="w-full h-full object-cover object-top"
+                    width={900}
+                    height={1350}
+                    decoding="async"
+                    className="block w-full h-full object-cover object-top"
                   />
                 </figure>
 

@@ -22,22 +22,25 @@ test('buildStructuredDataGraph emits MedicalClinic/LocalBusiness/Organization, P
     'WebSite',
     'WebPage',
     'BreadcrumbList',
-    ['MedicalClinic', 'LocalBusiness', 'Organization'],
+    ['MedicalClinic', 'MedicalBusiness', 'LocalBusiness', 'Organization'],
     ['Physician', 'Person'],
     'FAQPage',
   ]);
 
   const clinic = graph['@graph'].find(
-    (n) => Array.isArray(n['@type']) && n['@type'].includes('MedicalClinic')
+    (n) => Array.isArray(n['@type']) && n['@type'].includes('MedicalBusiness')
   ) as Record<string, unknown>;
   assert.equal(clinic.name, '경희부강한의원');
   assert.equal(clinic.url, 'https://khbugang.com/');
+  assert.equal(clinic.image, 'https://khbugang.com/images/clinic-exterior.jpg');
+  assert.equal(clinic.logo, 'https://khbugang.com/images/logo-header.jpg');
   assert.equal(clinic.telephone, '+82-2-842-8889');
 
   const physician = graph['@graph'].find(
     (n) => Array.isArray(n['@type']) && n['@type'].includes('Physician')
   ) as Record<string, unknown>;
   assert.equal(physician.name, '이현일');
+  assert.equal(physician.image, 'https://khbugang.com/images/doctor-profile.jpg');
   assert.ok(Array.isArray(physician.hasCredential) && physician.hasCredential.length >= 6);
 
   const faq = graph['@graph'].find((n) => n['@type'] === 'FAQPage') as {
@@ -48,12 +51,11 @@ test('buildStructuredDataGraph emits MedicalClinic/LocalBusiness/Organization, P
   assert.match(faq.mainEntity[3].acceptedAnswer.text, /롯데 하이마트 신길점/);
 });
 
-test('buildRobotsTxt allows OAI-SearchBot and search engines while blocking GPTBot with absolute Sitemap URL', () => {
+test('buildRobotsTxt allows GPTBot, OAI-SearchBot, ChatGPT-User, Googlebot, and Yeti with absolute Sitemap URL', () => {
   const robots = buildRobotsTxt();
-  for (const agent of ['*', 'Googlebot', 'Yeti', 'Bingbot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'ClaudeBot']) {
+  for (const agent of ['*', 'Googlebot', 'Yeti', 'Bingbot', 'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'PerplexityBot', 'ClaudeBot']) {
     assert.ok(robots.includes(`User-agent: ${agent}\nAllow: /`), `Missing Allow for ${agent}`);
   }
-  assert.ok(robots.includes('User-agent: GPTBot\nDisallow: /'));
   assert.ok(robots.includes('Sitemap: https://khbugang.com/sitemap.xml'));
 });
 

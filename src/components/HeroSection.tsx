@@ -73,11 +73,14 @@ export const HeroSection: React.FC = () => {
             <figure className="relative w-full aspect-[2.65/1] rounded overflow-hidden border border-[#DED8CE] bg-[#A36A36]">
               {!imgFailed ? (
                 <img
-                  src="/src/assets/images/hero_clinic_interior_1794831626501.jpg"
+                  src="/images/clinic-exterior.jpg"
                   alt="경희부강한의원 외관 및 주요 진료 안내 전경"
-                  referrerPolicy="no-referrer"
+                  width={914}
+                  height={477}
+                  fetchPriority="high"
+                  decoding="async"
                   onError={() => setImgFailed(true)}
-                  className="w-full h-full object-cover object-center scale-[1.02]"
+                  className="block w-full h-full object-cover object-center scale-[1.02]"
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-[#F9F7F4] to-[#E9E3D7]">

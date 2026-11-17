@@ -32,11 +32,13 @@ export const TreatmentsSection: React.FC = () => {
               <div className="aspect-[4/3] w-full overflow-hidden">
                 {!herbImgFailed ? (
                   <img
-                    src="/src/assets/images/herbal_apothecary_detail_1794831626802.jpg"
+                    src="/images/herbal-apothecary.jpg"
                     alt="정선된 한약재와 맞춤 한약 처방 이미지"
-                    referrerPolicy="no-referrer"
+                    width={1200}
+                    height={896}
+                    decoding="async"
                     onError={() => setHerbImgFailed(true)}
-                    className="w-full h-full object-cover"
+                    className="block w-full h-full object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center p-6 bg-[#EDE8DF] text-[#1E2638] font-serif">

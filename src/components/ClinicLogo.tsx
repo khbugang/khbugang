@@ -20,17 +20,17 @@ export const ClinicLogo: React.FC<ClinicLogoProps> = ({
       <img
         src={
           isLight
-            ? '/assets/aistudio/____________027ec46f.JPG'
-            : '/assets/aistudio/______6fe39d29.JPG'
+            ? '/images/logo-footer.jpg'
+            : '/images/logo-header.jpg'
         }
         alt="경희부강한의원 로고"
-        width={32}
-        height={32}
-        referrerPolicy="no-referrer"
+        width={isLight ? 130 : 128}
+        height={isLight ? 129 : 124}
+        decoding="async"
         className={
           isLight
-            ? 'w-9 h-9 object-contain rounded-sm shrink-0'
-            : 'w-8 h-8 object-contain shrink-0'
+            ? 'block w-9 h-9 object-contain rounded-sm shrink-0'
+            : 'block w-8 h-8 object-contain shrink-0'
         }
       />
 

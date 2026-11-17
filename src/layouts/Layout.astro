@@ -1,0 +1,113 @@
+---
+import '../index.css';
+import { buildStructuredDataGraph, PRODUCTION_SITE_ORIGIN } from '../seo/clinicSeo';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = '경희부강한의원 | 신길동·신풍역 한의원 · 이현일 원장 맞춤 한약 처방',
+  description = '서울 영등포구 신길동 신풍역 한의원 경희부강한의원. 경희대 한의대·이화여대 약대 겸임교수 이현일 원장(한의학박사)의 2009년 이후 임상 경험 기반 맞춤 한약 처방, 통증·소화기·두드러기·비염·산후보약·교통사고 후유증 진료.',
+} = Astro.props;
+
+const canonicalUrl = `${PRODUCTION_SITE_ORIGIN}/`;
+const ogImageUrl = `${PRODUCTION_SITE_ORIGIN}/images/clinic-exterior.jpg`;
+const jsonLd = JSON.stringify(buildStructuredDataGraph(PRODUCTION_SITE_ORIGIN), null, 2).replace(
+  /<\/script>/gi,
+  '<\\/script>'
+);
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta
+      name="keywords"
+      content="신길동 한의원, 신풍역 한의원, 경희부강한의원, 이현일 원장, 경희대 한의대 겸임교수, 이화여대 약대 겸임교수, 맞춤 한약 처방, 한약 잘하는 한의원, 영등포구 한의원, 신풍역 야간진료, 신길동 교통사고 한의원"
+    />
+    <meta name="author" content="경희부강한의원 대표원장 이현일" />
+    <meta
+      name="robots"
+      content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
+    />
+    <meta name="theme-color" content="#1E2638" />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
+    <link
+      rel="alternate"
+      type="text/plain"
+      href="/llms.txt"
+      title="경희부강한의원 AI 검색 요약 (llms.txt)"
+    />
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="경희부강한의원" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta
+      property="og:title"
+      content="경희부강한의원 | 신길동·신풍역 맞춤 한약 처방 · 이현일 대표원장"
+    />
+    <meta
+      property="og:description"
+      content="삶을 풍부하게, 생명력을 강인하게. 경희대 한의대·이화여대 약대 겸임교수 이현일 박사가 직접 진단하고 처방하는 신길동·신풍역 경희부강한의원입니다."
+    />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="914" />
+    <meta property="og:image:height" content="477" />
+    <meta property="og:image:alt" content="경희부강한의원 외관 및 주요 진료 안내 전경" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="경희부강한의원 | 신길동·신풍역 맞춤 한약 처방" />
+    <meta
+      name="twitter:description"
+      content="경희대 한의대·이화여대 약대 겸임교수 이현일 대표원장의 기초부터 탄탄한 맞춤 한약 처방과 정밀 진료."
+    />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Fonts: Noto Serif KR (Google Fonts) & Pretendard (CDN) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css"
+    />
+
+    <!-- Schema.org Structured Data (GEO / AI Search Optimization) -->
+    <script id="clinic-jsonld" type="application/ld+json" set:html={jsonLd} />
+  </head>
+  <body class="bg-white text-[#222222] antialiased selection:bg-[#1E2638] selection:text-white">
+    <slot />
+    <script is:inline>
+      (function () {
+        var map = {
+          '/hero': 'hero',
+          '/doctor': 'doctor',
+          '/treatments': 'treatments',
+          '/faq': 'faq',
+          '/location': 'location',
+        };
+        var path = window.location.pathname.replace(/\/+$/, '');
+        var id = map[path];
+        if (id) {
+          var el = document.getElementById(id);
+          if (el) el.scrollIntoView({ behavior: 'auto' });
+        }
+      })();
+    </script>
+  </body>
+</html>

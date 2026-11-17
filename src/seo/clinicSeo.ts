@@ -27,9 +27,9 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
   const breadcrumbId = `${origin}/#breadcrumb`;
   const faqId = `${origin}/#faq`;
 
-  const heroImageUrl = `${origin}/src/assets/images/hero_clinic_interior_1794831626501.jpg`;
-  const logoImageUrl = `${origin}/assets/aistudio/______6fe39d29.JPG`;
-  const doctorImageUrl = `${origin}/src/assets/images/doctor_portrait_editorial_1794831626396.jpg`;
+  const heroImageUrl = `${origin}/images/clinic-exterior.jpg`;
+  const logoImageUrl = `${origin}/images/logo-header.jpg`;
+  const doctorImageUrl = `${origin}/images/doctor-profile.jpg`;
 
   return {
     '@context': 'https://schema.org',
@@ -68,6 +68,7 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
         primaryImageOfPage: {
           '@type': 'ImageObject',
           url: heroImageUrl,
+          caption: '경희부강한의원 외관 및 주요 진료 안내 전경',
         },
         speakable: {
           '@type': 'SpeakableSpecification',
@@ -87,7 +88,7 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
         ],
       },
       {
-        '@type': ['MedicalClinic', 'LocalBusiness', 'Organization'],
+        '@type': ['MedicalClinic', 'MedicalBusiness', 'LocalBusiness', 'Organization'],
         '@id': clinicId,
         name: CLINIC_INFO.nameKo,
         alternateName: CLINIC_INFO.nameEn,
@@ -346,10 +347,9 @@ export function buildRobotsTxt(rawOrigin?: string | null): string {
     'User-agent: DuckAssistBot',
     'Allow: /',
     '',
-    '# AI 모델 학습 전용 크롤러 분리 설정',
-    '# GPTBot: OpenAI 모델 학습 데이터 수집용 크롤러 (검색 노출용 OAI-SearchBot과 별도 차단)',
+    '# GPTBot: OpenAI 검색·크롤링 허용',
     'User-agent: GPTBot',
-    'Disallow: /',
+    'Allow: /',
     '',
     `Sitemap: ${origin}/sitemap.xml`,
     '',
