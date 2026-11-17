@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, Train, Car, Phone, Mail, BookOpen, ExternalLink } from 'lucide-react';
 import { CLINIC_INFO, CLINIC_LINKS, CLINIC_SCHEDULE_ROWS } from '../data/clinicData';
+import { handleClinicImageError } from '../utils/imageFallbackHandler';
 
 export const LocationHoursSection: React.FC = () => {
   return (
@@ -196,6 +197,7 @@ export const LocationHoursSection: React.FC = () => {
                     width={900}
                     height={1350}
                     decoding="async"
+                    onError={(e) => handleClinicImageError(e)}
                     className="block w-full h-full object-cover object-top"
                   />
                 </figure>

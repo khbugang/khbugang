@@ -1,4 +1,5 @@
 import React from 'react';
+import { handleClinicImageError } from '../utils/imageFallbackHandler';
 
 interface ClinicLogoProps {
   variant?: 'header' | 'footer';
@@ -27,6 +28,7 @@ export const ClinicLogo: React.FC<ClinicLogoProps> = ({
         width={isLight ? 130 : 128}
         height={isLight ? 129 : 124}
         decoding="async"
+        onError={(e) => handleClinicImageError(e)}
         className={
           isLight
             ? 'block w-9 h-9 object-contain rounded-sm shrink-0'

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CalendarCheck, BookOpen, Phone } from 'lucide-react';
 import { CLINIC_INFO, CLINIC_LINKS } from '../data/clinicData';
+import { handleClinicImageError } from '../utils/imageFallbackHandler';
 
 export const HeroSection: React.FC = () => {
   const [imgFailed, setImgFailed] = useState(false);
@@ -25,7 +26,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             <p className="font-serif text-[17px] sm:text-[19px] font-medium text-[#A36A36] tracking-[-0.01em] mb-3.5">
-              “{CLINIC_INFO.slogan}”
+              {`“${CLINIC_INFO.slogan}”`}
             </p>
 
             <h1 className="font-serif text-[28px] sm:text-[36px] lg:text-[40px] font-semibold text-[#1E2638] leading-[1.34] tracking-[-0.02em] [text-wrap:balance] mb-5">
@@ -63,7 +64,7 @@ export const HeroSection: React.FC = () => {
                 className="inline-flex items-center justify-center gap-1.5 px-4 py-3 text-[14px] font-medium text-[#A36A36] bg-white hover:bg-[#F2EFE9] border border-[#A36A36]/45 rounded transition-colors duration-150 whitespace-nowrap shrink-0 min-h-[46px] tabular-nums focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A36A36]"
               >
                 <Phone className="w-4 h-4 shrink-0" aria-hidden="true" />
-                <span>전화 상담 {CLINIC_LINKS.phoneDisplay}</span>
+                <span>{`전화 상담 ${CLINIC_LINKS.phoneDisplay}`}</span>
               </a>
             </div>
           </div>
@@ -79,7 +80,7 @@ export const HeroSection: React.FC = () => {
                   height={477}
                   fetchPriority="high"
                   decoding="async"
-                  onError={() => setImgFailed(true)}
+                  onError={(e) => handleClinicImageError(e, () => setImgFailed(true))}
                   className="block w-full h-full object-cover object-center scale-[1.02]"
                 />
               ) : (

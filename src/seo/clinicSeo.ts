@@ -51,7 +51,7 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
         url: siteUrl,
         name: `${CLINIC_INFO.nameKo} | 신길동·신풍역 한의원 · ${DOCTOR_PROFILE.name} 원장 맞춤 한약 처방`,
         description:
-          '서울 영등포구 신길동 신풍역 4번 출구 인근 경희부강한의원. 경희대 한의과대학·이화여대 약학대학 겸임교수 이현일 한의학박사의 2009년 이후 임상 경험 기반 맞춤 한약 처방 및 5대 전문 클리닉 진료.',
+          '서울 영등포구 신길동 신풍역 4번 출구 인근 경희부강한의원. 경희대학교 한의과대학 학사·석사·박사(생리학 전공) 및 경희대 한의과대학·이화여대 약학대학 겸임교수 이현일 한의학박사의 2009년 이후 임상 경험 기반 맞춤 한약 처방 및 5대 전문 클리닉 진료.',
         inLanguage: 'ko-KR',
         isPartOf: {
           '@id': websiteId,
@@ -93,7 +93,7 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
         name: CLINIC_INFO.nameKo,
         alternateName: CLINIC_INFO.nameEn,
         description:
-          '서울 영등포구 신길동 신풍역 4번 출구 인근(신길로 145, 1층)에 위치한 경희부강한의원. 경희대학교 한의과대학·이화여자대학교 약학대학·이화여자대학교 임상바이오헬스대학원 겸임교수 이현일 한의학박사가 2009년부터 이어온 임상 경험을 바탕으로 맞춤 한약 처방, 통증 치료, 소화기 장애, 두드러기·피부 소양증·비염·자가면역성 질환, 보양·산후 조리약, 교통사고 후유증을 진료합니다.',
+          '서울 영등포구 신길동 신풍역 4번 출구 인근(신길로 145, 1층)에 위치한 경희부강한의원. 경희대학교 한의과대학 학사(2009년 졸업)·석사·박사(2017년 생리학 전공)이자 경희대학교 한의과대학·이화여자대학교 약학대학·이화여자대학교 임상바이오헬스대학원 겸임교수 이현일 한의학박사가 2009년부터 이어온 임상 경험을 바탕으로 맞춤 한약 처방, 통증 치료, 소화기 장애, 두드러기·피부 소양증·비염·자가면역성 질환, 보양·산후 조리약, 교통사고 후유증을 진료합니다.',
         slogan: CLINIC_INFO.slogan,
         url: siteUrl,
         image: heroImageUrl,
@@ -203,7 +203,7 @@ export function buildStructuredDataGraph(rawOrigin?: string | null) {
         image: doctorImageUrl,
         jobTitle:
           '경희부강한의원 대표원장 · 경희대학교 한의과대학 겸임교수 · 이화여자대학교 약학대학 겸임교수 · 이화여자대학교 임상바이오헬스대학원 겸임교수',
-        description: DOCTOR_PROFILE.coreMessage,
+        description: `경희대학교 한의과대학 학사(2009년 졸업)·석사·박사(2017년 생리학 전공). ${DOCTOR_PROFILE.coreMessage}`,
         alumniOf: [
           {
             '@type': 'CollegeOrUniversity',

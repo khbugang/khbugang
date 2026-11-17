@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TREATMENT_CLINICS } from '../data/clinicData';
+import { handleClinicImageError } from '../utils/imageFallbackHandler';
 
 export const TreatmentsSection: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string>('all');
@@ -37,7 +38,7 @@ export const TreatmentsSection: React.FC = () => {
                     width={1200}
                     height={896}
                     decoding="async"
-                    onError={() => setHerbImgFailed(true)}
+                    onError={(e) => handleClinicImageError(e, () => setHerbImgFailed(true))}
                     className="block w-full h-full object-cover"
                   />
                 ) : (
